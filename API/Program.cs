@@ -12,8 +12,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(opt=>{
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+//4000 portundan gelen isteklere yanıt verebilmesi için CORS(Cross-origin Resource Sharing) configurationu yapıldı.
+//var app = builder.Build(); sonra yapıldığında sorun olduğu için üste taşındı
 
+builder.Services.AddCors(opt=>{
+    opt.AddPolicy("CorsPolicy",policy=>{
+        policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:4000");
+    });
+});
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -22,7 +30,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
+app.UseCors("CorsPolicy");
 
 app.UseAuthorization();
 
