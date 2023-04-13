@@ -7,6 +7,11 @@ import ActivityForm from '../form/ActivityForm';
 
 interface Props{
     activities:Activity[];
+    selectedActivity:Activity|undefined;
+    selectActivity:(id:string) => void;
+    cancelSelectActivity:() => void;
+
+
 }
 
 export default function ActivityDasboard(props:Props) {
@@ -14,11 +19,11 @@ export default function ActivityDasboard(props:Props) {
     return (
 <Grid>
     <Grid.Column width='10'>
-    <ActivityList activities={props.activities}/>
+    <ActivityList activities={props.activities} selectActivity={props.selectActivity}  />
     </Grid.Column>
     <Grid.Column width={6}>
-        {props.activities[0]&&
-        <ActivityDetails activity={props.activities[1]}/>}
+        {props.selectedActivity&&
+        <ActivityDetails activity={props.selectedActivity} cancelSelectActivity={props.cancelSelectActivity}/>}
         <ActivityForm/>
 
     </Grid.Column>
