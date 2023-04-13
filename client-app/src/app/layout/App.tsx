@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Button, Container, Header, List } from 'semantic-ui-react';
 import {Activity} from '../models/activity'
 import NavBar from './NavBar';
+import ActivityDasboard from '../../features/activities/dashboard/ActivityDashboard';
 
 function App() {
 const [activities,setActivities]=useState<Activity[]>([]);
@@ -13,18 +14,11 @@ axios.get<Activity[]>('http://localhost:5000/api/activities').then(response=>{
   setActivities(response.data);
 })
 },[])
-
-
   return (
     <Fragment>
     <NavBar/>
     <Container style={{marginTop:'7em'}}>
-    <List>
-          {activities.map(activity=>
-          <List.Item key={activity.id}>
-            {activity.title}
-          </List.Item>)}
-        </List>
+      <ActivityDasboard activities={activities}/>
     </Container>
     </Fragment>
   );
