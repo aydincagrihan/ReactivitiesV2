@@ -10,6 +10,10 @@ interface Props{
     selectedActivity:Activity|undefined;
     selectActivity:(id:string) => void;
     cancelSelectActivity:() => void;
+    openForm:(id:string) => void;
+    closeForm:() => void;
+    editMode:boolean;
+
 
 
 }
@@ -22,9 +26,15 @@ export default function ActivityDasboard(props:Props) {
     <ActivityList activities={props.activities} selectActivity={props.selectActivity}  />
     </Grid.Column>
     <Grid.Column width={6}>
-        {props.selectedActivity&&
-        <ActivityDetails activity={props.selectedActivity} cancelSelectActivity={props.cancelSelectActivity}/>}
-        <ActivityForm/>
+        {props.selectedActivity&& !props.editMode &&
+        <ActivityDetails 
+        activity={props.selectedActivity} 
+        cancelSelectActivity={props.cancelSelectActivity}
+        openForm={props.openForm}
+        
+        />}
+        {props.editMode&&
+        <ActivityForm closeForm={props.closeForm} activity={props.selectedActivity}/>}
 
     </Grid.Column>
 </Grid>
