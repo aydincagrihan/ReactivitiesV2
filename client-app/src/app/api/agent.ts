@@ -1,23 +1,22 @@
-import axios, { AxiosResponse } from 'axios'
+import axios, { AxiosResponse } from "axios";
+import { Activity } from "../models/activity";
 
+axios.defaults.baseURL = "http://localhost:5000/api";
 
-axios.defaults.baseURL="http://localhost:5000/api";
+const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
-const responseBody=(response:AxiosResponse)=>response.data;
+const request = {
+  get: <T>(url: string) => axios.get<T>(url).then(responseBody),
+  post: <T>(url: string, body: {}) => axios.post<T>(url).then(responseBody),
+  put: <T>(url: string, body: {}) => axios.put<T>(url).then(responseBody),
+  del: <T>(url: string) => axios.delete<T>(url).then(responseBody),
+};
 
-const request={
-    get: (url:string)=>axios.get(url).then(responseBody),
-    post: (url:string,body:{})=>axios.post(url).then(responseBody),
-    put: (url:string,body:{})=>axios.put(url).then(responseBody),
-    del: (url:string)=>axios.delete(url).then(responseBody),
+const Activities = {
+  list: () => request.get<Activity[]>("/activities"),
+};
 
-}
-
-const Activities={
-    list:()=>request.get('/activities'),
-}
-
-const agent={
-    Activities
-}
+const agent = {
+  Activities,
+};
 export default agent;

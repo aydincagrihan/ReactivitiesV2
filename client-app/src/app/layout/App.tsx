@@ -16,7 +16,15 @@ useEffect(()=>{
 //   console.log(response);
 //   setActivities(response.data);
 // })
-agent.Activities.list().then(response=>{setActivities(response)})
+agent.Activities.list().then(response=>{
+  let activities:Activity[]=[];
+ response.forEach(activity=>{
+  //response gelip datalar basılmadan önce tarih formatında düzenleme yaptım
+activity.date=activity.date.split('T')[0];
+activities.push(activity);
+ })
+  setActivities(response)
+})
 
 },[])
 
