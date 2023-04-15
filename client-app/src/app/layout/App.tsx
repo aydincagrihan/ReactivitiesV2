@@ -60,6 +60,7 @@ function App() {
       })
     }
     else {
+      debugger
       activity.id = uuid();
       agent.Activities.create(activity).then(() => {
         setActivities([...activities, activity]);
@@ -71,7 +72,11 @@ function App() {
   }
 
   function handleDeleteActivity(id: string) {
+    setSubmitting(true);
+    agent.Activities.delete(id).then(() => {
     setActivities([...activities.filter(x => x.id !== id)]);
+      setSubmitting(false);
+    })
   }
   if (loading) return <LoadingComponent content='Loading App' />
 
