@@ -14,12 +14,14 @@ interface Props{
     editMode:boolean;
     createOrEdit:(activity:Activity) => void;
     deleteActivity:(id:string) => void;
+    submitting:boolean;
 
 
 
 }
 
-export default function ActivityDasboard({activities,selectedActivity,selectActivity,cancelSelectActivity,editMode,openForm,closeForm,createOrEdit,deleteActivity}:Props) {
+export default function ActivityDasboard({activities,selectedActivity,selectActivity,submitting
+    ,cancelSelectActivity,editMode,openForm,closeForm,createOrEdit,deleteActivity}:Props) {
 
     return (
 <Grid>
@@ -35,7 +37,7 @@ export default function ActivityDasboard({activities,selectedActivity,selectActi
         
         />}
         {editMode&&
-        <ActivityForm closeForm={closeForm} activity={selectedActivity} createOrEdit={createOrEdit}/>}
+        <ActivityForm closeForm={closeForm} activity={selectedActivity} createOrEdit={createOrEdit} submitting={submitting}/>}
 
     </Grid.Column>
 </Grid>
