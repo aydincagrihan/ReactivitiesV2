@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { Activity } from "../models/activity";
 import agent from "../api/agent";
 import { v4 as uuid } from "uuid";
+import { textSpanIntersectsWithPosition } from "typescript";
 
 export default class ActivityStore {
   activities: Activity[] = [];
@@ -84,6 +85,21 @@ cancelSelectedActivity = () => {
         this.editMode=false;
         this.loading=false;
       })
+      
+    } catch (error) {
+      console.log(error);
+      runInAction(()=>{
+        this.loading=false;
+      })
+    }
+  }
+
+  deleteActivity=async(id:string)=>{
+    this.loading=true;
+    try {
+      this.activities=[...this.activities.filter(a=>a.id!==id)];
+      if(this.selectedActivity?.id===id) this.cancelSelectedActivity;
+      this.loading=false;
       
     } catch (error) {
       console.log(error);
