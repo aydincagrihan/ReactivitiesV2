@@ -24,7 +24,7 @@ export default class ActivityStore {
     try {
       const activities = await agent.Activities.list();
       activities.forEach((activity) => {
-        //response gelip datalar basılmadan önce tarih formatında düzenleme yaptım
+        //response gelip datalar basılmadan önce tarih formatında düzenleme yaptım//
         activity.date = activity.date.split("T")[0];
         this.activities.push(activity);
         this.activityRegistry.set(activity.id,activity);
