@@ -5,13 +5,16 @@ import './app/layout/styles.css';
 import reportWebVitals from './reportWebVitals';
 import App from './app/layout/App';
 import { StoreContext, store } from './app/stores/store';
+import { RouterProvider } from 'react-router-dom';
+import { router } from './app/router/Route';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
+  //RouterProvider eklendi,App artık router in içinde
   <StoreContext.Provider value={store} >
-  <App />
+    <RouterProvider router={router}/>
 
   </StoreContext.Provider>
 );
