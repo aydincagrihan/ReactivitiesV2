@@ -6,34 +6,11 @@ import ActivityDasboard from '../../features/activities/dashboard/ActivityDashbo
 import LoadingComponent from './LoadingComponent';
 import { useStore } from '../stores/store';
 import { observer } from 'mobx-react-lite';
+import { Outlet } from 'react-router-dom';
 
 function App() {
-const {activityStore}=useStore();
 
 
-
-  const [activities, setActivities] = useState<Activity[]>([]);
-  const [submitting, setSubmitting] = useState(false);
-
-
-  useEffect(() => {
-    // // axios.get<Activity[]>('http://localhost:5000/api/activities').then(response=>{
-    // //   console.log(response);
-    // //   setActivities(response.data);
-    // // })
-    // agent.Activities.list().then(response => {
-    //   let activities: Activity[] = [];
-    //   response.forEach(activity => {
-    //     //response gelip datalar basılmadan önce tarih formatında düzenleme yaptım
-    //     activity.date = activity.date.split('T')[0];
-    //     activities.push(activity);
-    //   })
-    //   setActivities(response)
-    //   setLoading(false)
-    // })
-    activityStore.loadActivities();
-
-  }, [activityStore])
 // bu 4 function activityStore a taşındığı için burdan siliyorum refactoring yaptım
   // function handleSelectActivity(id: string) {
   //   setSelectedActivity(activities.find(x => x.id === id));
@@ -81,12 +58,14 @@ const {activityStore}=useStore();
   //     //
   //   })
   // }
-  if (activityStore.loadingInitial) return <LoadingComponent content='Loading App' />
+
+
+  //Outlet Child Routları yönlendiriyor.
   return (
     <Fragment>
       <NavBar />
       <Container style={{ marginTop: '7em' }}>
-        <ActivityDasboard/>
+        <Outlet/>
       </Container>
     </Fragment>
   );
