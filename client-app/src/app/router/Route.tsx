@@ -3,6 +3,7 @@ import App from "../layout/App";
 import HomePage from "../../features/home/HomePage";
 import ActivityDashboard from "../../features/activities/dashboard/ActivityDashboard";
 import ActivityForm from "../../features/activities/form/ActivityForm";
+import ActivityDetails from "../../features/activities/details/ActivityDetails";
 
 
 export const routes: RouteObject[] = [
@@ -19,7 +20,7 @@ export const routes: RouteObject[] = [
                 element: <ActivityDashboard />
             }, {
                 path: "/activities/:id",
-                element: <ActivityDashboard />
+                element: <ActivityDetails />
             },
             {
                 path: "createActivity",

@@ -8,16 +8,9 @@ import { useEffect, useState } from 'react';
 import { Activity } from '../../../app/models/activity';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 
-
 export default observer(function ActivityDasboard() {
-
-
     const { activityStore } = useStore();
     const { selectedActivity, editMode } = activityStore;
-
-
-
-
   useEffect(() => {
     // // axios.get<Activity[]>('http://localhost:5000/api/activities').then(response=>{
     // //   console.log(response);
@@ -44,11 +37,11 @@ export default observer(function ActivityDasboard() {
                 <ActivityList/>
             </Grid.Column>
             <Grid.Column width={6}>
-                {selectedActivity && !editMode &&
+               <h2>Activity Filters</h2>
+               {/* {selectedActivity && !editMode &&
                     <ActivityDetails />}
                 {editMode &&
-                    <ActivityForm   />}
-
+                    <ActivityForm   />} */}
             </Grid.Column>
         </Grid>
 
