@@ -1,25 +1,37 @@
-import  { ChangeEvent, useState } from 'react';
+import  { ChangeEvent, useEffect, useState } from 'react';
 import { Button, Form, Segment } from 'semantic-ui-react';
 import { Activity } from '../../../app/models/activity';
 import { useStore } from '../../../app/stores/store';
 import { observer } from 'mobx-react-lite';
+import { useParams } from 'react-router-dom';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
 
 
 
 export default observer( function ActivityForm(){
     const {activityStore}=useStore();
-    const{selectedActivity,createActivity,updateActivity,loading}=activityStore
+    const{selectedActivity,createActivity,updateActivity,loading,loadActivity,loadingInitial}=activityStore
 
-const initialState=selectedActivity??{
-    id: '',
-    title: '',
-    date: '',
-    description: '',
-    category: '',
-    city: '',
-    venue: '',
-}
-const [activity,setActivity]=useState(initialState);
+    const {id}=useParams();
+    const [activity,setActivity]=useState<Activity>({
+        id: '',
+        title: '',
+        date: '',
+        description: '',
+        category: '',
+        city: '',
+        venue: '',
+    });
+
+    useEffect(()=>{
+        //activitiy "!" sonuna koymamın nedeni bu ifadenin null or undefined 
+        //olmayacağı anlamına gelir yoksa tip güvenliğinden hata return ediyordu
+        //TypeScript functionality kapatmak için ! kullanılır
+        if(id)loadActivity(id).then(activity=>setActivity(activity!))
+    },[id,loadActivity])
+
+
+// const [activity,setActivity]=useState(initialState);
 
 function handleSubmit(){
     activity.id ? updateActivity(activity):createActivity(activity);
@@ -31,6 +43,7 @@ function handleInputChange(event:ChangeEvent<HTMLInputElement|HTMLTextAreaElemen
  setActivity({...activity,[name]:value});
 }
 
+if(loadingInitial) return <LoadingComponent content='Aktivite Yükleniyor...'/>
 
     return(
         <Segment clearing>
