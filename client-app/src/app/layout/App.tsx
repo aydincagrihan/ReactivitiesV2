@@ -1,17 +1,18 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import {  Container } from 'semantic-ui-react';
+import { Container } from 'semantic-ui-react';
 import { Activity } from '../models/activity'
 import NavBar from './NavBar';
 import ActivityDasboard from '../../features/activities/dashboard/ActivityDashboard';
 import LoadingComponent from './LoadingComponent';
 import { useStore } from '../stores/store';
 import { observer } from 'mobx-react-lite';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
+import HomePage from '../../features/home/HomePage';
 
 function App() {
 
 
-// bu 4 function activityStore a taşındığı için burdan siliyorum refactoring yaptım
+  // bu 4 function activityStore a taşındığı için burdan siliyorum refactoring yaptım
   // function handleSelectActivity(id: string) {
   //   setSelectedActivity(activities.find(x => x.id === id));
   // }
@@ -59,16 +60,21 @@ function App() {
   //   })
   // }
 
-
+  const location = useLocation();
   //Outlet Child Routları yönlendiriyor.
   return (
-    <Fragment>
-      <NavBar />
-      <Container style={{ marginTop: '7em' }}>
-        <Outlet/>
-      </Container>
-    </Fragment>
+    <>
+      {location.pathname === '/' ? <HomePage /> : (
+        <Fragment>
+          <NavBar />
+          <Container style={{ marginTop: '7em' }}>
+            <Outlet />
+          </Container>
+        </Fragment>
+
+      )}
+    </>
   );
 }
 
-export default observer(App) ;
+export default observer(App);

@@ -11,7 +11,11 @@ import LoadingComponent from '../../../app/layout/LoadingComponent';
 export default observer(function ActivityDasboard() {
     const { activityStore } = useStore();
     const { selectedActivity, editMode } = activityStore;
+    const {loadActivities,activityRegistry}=activityStore
   useEffect(() => {
+    //<=1 olmasının sebebi örneğin bir activity sayfasında yenileme işlemi yapılıp
+    // tekrar geri gelindiğinde o aktiviteyi registryde tutmasıydı diğer aktivitileri registryden siliyordu
+    if(activityRegistry.size<=1)loadActivities();
     // // axios.get<Activity[]>('http://localhost:5000/api/activities').then(response=>{
     // //   console.log(response);
     // //   setActivities(response.data);
@@ -26,9 +30,8 @@ export default observer(function ActivityDasboard() {
     //   setActivities(response)
     //   setLoading(false)
     // })
-    activityStore.loadActivities();
 
-  }, [activityStore])
+  }, [loadActivities])
   if (activityStore.loadingInitial) return <LoadingComponent content='Loading App' />
 
     return (
