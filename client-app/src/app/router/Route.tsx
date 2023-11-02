@@ -6,6 +6,7 @@ import ActivityForm from "../../features/activities/form/ActivityForm";
 import ActivityDetails from "../../features/activities/details/ActivityDetails";
 import TestErrors from "../../features/errors/TestError";
 import NotFound from "../../features/errors/NotFound";
+import ServerError from "../../features/errors/ServerError";
 
 
 export const routes: RouteObject[] = [
@@ -33,6 +34,10 @@ export const routes: RouteObject[] = [
                 element: <TestErrors />
             },
             {
+                path: "server-error",
+                element: <ServerError />
+            },
+            {
                 path: "not-found",
                 element: <NotFound />
             },
@@ -40,7 +45,8 @@ export const routes: RouteObject[] = [
             {
                 path: "*",
                 element: <Navigate replace to="/not-found" />
-            }
+            },
+        
         ]
     }
 
