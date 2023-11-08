@@ -15,7 +15,9 @@ namespace Persistence
 
                         new AppUser{DisplayName="Çağrıhan",UserName="han",Email="cat@test.com"},
                         new AppUser{DisplayName="Çağla",UserName="cagla",Email="cagla@test.com"},
-                        new AppUser{DisplayName="Aydin",UserName="aydin",Email="cat@test.com"},
+                        new AppUser{DisplayName="Aydin",UserName="aydin",Email="cat1@test.com"},
+                        new AppUser{DisplayName="ÇağrıhanAydin",UserName="han",Email="cat68@test.com"},
+
                     };
                 foreach (var user in users)
                 {
