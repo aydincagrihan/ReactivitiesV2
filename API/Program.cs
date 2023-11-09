@@ -27,6 +27,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("CorsPolicy");
+app.UseAuthentication();
 
 app.UseAuthorization();
 

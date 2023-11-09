@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
 using Application;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -16,7 +17,7 @@ namespace API.Controllers
             // return await Mediator.Send(new Application.Activities.List.Query());
             return HandleResult( await Mediator.Send(new Application.Activities.List.Query()));
         }
-
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult>GetActivity(Guid id)
         {
