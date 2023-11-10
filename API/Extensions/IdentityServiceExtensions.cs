@@ -14,6 +14,7 @@ namespace API.Extensions
     //Startup tarafını bölerek gidiyorum  identity ile ilgili servis işlemleri burda yapılıyor,burdanda Program cs içerisinde bu class çağırılıyor.
     public static class IdentityServiceExtensions
     {
+     
         public static IServiceCollection AddIdentityService(this IServiceCollection services, IConfiguration config)
         {
             services.AddIdentityCore<AppUser>(opt =>
@@ -21,7 +22,7 @@ namespace API.Extensions
                 opt.Password.RequireNonAlphanumeric = false;
 
             }).AddEntityFrameworkStores<DataContext>();
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("04D92F9E3FA6E499BB6248120135CABC5B6F4E81B0FC744ED7937B8D7E1AAC98"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
             {
                 opt.TokenValidationParameters = new TokenValidationParameters
