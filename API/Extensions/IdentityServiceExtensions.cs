@@ -19,7 +19,9 @@ namespace API.Extensions
         {
             services.AddIdentityCore<AppUser>(opt =>
             {
+                //Kullanıcı oluşturulurken optionsları bu şekilde belirttim
                 opt.Password.RequireNonAlphanumeric = false;
+                opt.User.RequireUniqueEmail=true;
 
             }).AddEntityFrameworkStores<DataContext>();
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
