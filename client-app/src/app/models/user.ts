@@ -1,4 +1,3 @@
-import { StringifyOptions } from "querystring";
 
 export interface User{
     username:string;
