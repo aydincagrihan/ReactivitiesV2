@@ -19,12 +19,15 @@ axios.interceptors.response.use(
     return response;
   },
   (error: AxiosError) => {
-    const { data, status ,config} = error.response as AxiosResponse;
+    const { data, status, config } = error.response as AxiosResponse;
     switch (status) {
       // HTTP status code "400" olanlar Validation Error gibi olanlardır ,bir post  isteği yaparken örneğin null alan kontrolüne takıldığından bu hatayı verir
       case 400:
-        if(config.method==="get"&& Object.prototype.hasOwnProperty.call(data.errors,'id')){
-          router.navigate('/not-found');
+        if (
+          config.method === "get" &&
+          Object.prototype.hasOwnProperty.call(data.errors, "id")
+        ) {
+          router.navigate("/not-found");
         }
         if (data.errors) {
           const modalStateErrors = [];
@@ -34,8 +37,7 @@ axios.interceptors.response.use(
             }
           }
           throw modalStateErrors.flat();
-        }
-        else{
+        } else {
           toast.error(data);
         }
         break;
@@ -50,7 +52,7 @@ axios.interceptors.response.use(
         break;
       case 500:
         store.commonStore.setServerError(data);
-        router.navigate('/server-error');
+        router.navigate("/server-error");
         break;
     }
     return Promise.reject(error);
@@ -61,7 +63,10 @@ const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
 const request = {
   get: <T>(url: string) => axios.get<T>(url).then(responseBody),
-  post: <T>(url: string, body: {}) => axios.post<T>(url).then(responseBody),
+  post: <T>(url: string, body: {}) =>
+    axios
+      .post<T>(url, body, { headers: { "Content-Type": "application/json" } })
+      .then(responseBody),
   put: <T>(url: string, body: {}) => axios.put<T>(url).then(responseBody),
   del: <T>(url: string) => axios.delete<T>(url).then(responseBody),
 };
@@ -75,14 +80,15 @@ const Activities = {
   delete: (id: string) => axios.delete<void>(`/activities/${id}`),
 };
 
-const Account={
-  current:()=>request.get<User>('/account'),
-  login:(user:UserFormValues)=>axios.post<User>('/account/login',user),
-  register:(user:UserFormValues)=>axios.post<User>('/account/register',user)
-}
+const Account = {
+  current: () => request.get<User>("/account"),
+  login: (user: UserFormValues) => request.post<User>("/account/login", user),
+  register: (user: UserFormValues) =>
+    axios.post<User>("/account/register", user),
+};
 
 const agent = {
   Activities,
-  Account
+  Account,
 };
 export default agent;
