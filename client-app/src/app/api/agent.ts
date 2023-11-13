@@ -61,6 +61,14 @@ axios.interceptors.response.use(
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
+//Bu kodun temel amacı, her HTTP isteği gönderildiğinde otomatik olarak token tabanlı bir yetkilendirme başlığını eklemektir
+// Axios interceptors, HTTP isteklerini veya cevaplarını ele almak ve bunları değiştirmek için kullanılan fonksiyonlardır.
+axios.interceptors.request.use(config=>{
+  const token=store.commonStore.token;
+  if(token&&config.headers)config.headers.Authorization=`Bearer ${token}`;
+  return config;
+})
+
 const request = {
   get: <T>(url: string) => axios.get<T>(url).then(responseBody),
   post: <T>(url: string, body: {}) =>
