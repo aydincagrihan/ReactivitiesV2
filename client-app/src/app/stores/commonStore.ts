@@ -17,6 +17,14 @@ export default class CommonStore {
     if (token) localStorage.setItem("jwt", token);
     this.token = token;
   };
+  // setToken = async (token: string | undefined | null) => {
+  //   if (token) {
+  //     localStorage.setItem("jwt", token);
+  //   }
+  //   await Promise.resolve(); // Asenkron işlem ekleyebilirsiniz.
+  //   this.token = token;
+  // };
+  
 
   setAppLoaded = () => {
     this.appLoaded = true;
