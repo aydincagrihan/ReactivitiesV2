@@ -12,7 +12,6 @@ import { ToastContainer } from 'react-toastify';
 
 function App() {
 
-
   // bu 4 function activityStore a taşındığı için burdan siliyorum refactoring yaptım
   // function handleSelectActivity(id: string) {
   //   setSelectedActivity(activities.find(x => x.id === id));
@@ -62,10 +61,23 @@ function App() {
   // }
 
   const location = useLocation();
+  const { userStore, commonStore } = useStore();
+
+  useEffect(() => {
+    if (commonStore.token) {
+      userStore.getUser().finally(() => commonStore.setAppLoaded());
+    } else {
+      commonStore.setAppLoaded()
+    }
+
+  }, [commonStore,userStore])
+
+if(!commonStore.appLoaded)return <LoadingComponent content='Loading app...' />
+
   //Outlet Child Routları yönlendiriyor.
   return (
     <>
-    <ToastContainer position='bottom-right' hideProgressBar theme='colored'/>
+      <ToastContainer position='bottom-right' hideProgressBar theme='colored' />
       {location.pathname === '/' ? <HomePage /> : (
         <Fragment>
           <NavBar />
