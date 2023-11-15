@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using API.Services;
 using Domain;
+using Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
 
@@ -14,14 +16,14 @@ namespace API.Extensions
     //Startup tarafını bölerek gidiyorum  identity ile ilgili servis işlemleri burda yapılıyor,burdanda Program cs içerisinde bu class çağırılıyor.
     public static class IdentityServiceExtensions
     {
-     
+
         public static IServiceCollection AddIdentityService(this IServiceCollection services, IConfiguration config)
         {
             services.AddIdentityCore<AppUser>(opt =>
             {
                 //Kullanıcı oluşturulurken optionsları bu şekilde belirttim
                 opt.Password.RequireNonAlphanumeric = false;
-                opt.User.RequireUniqueEmail=true;
+                opt.User.RequireUniqueEmail = true;
 
             }).AddEntityFrameworkStores<DataContext>();
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
@@ -37,6 +39,14 @@ namespace API.Extensions
                 };
 
             });
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy("IsActivityHost", policy =>
+                {
+                    policy.Requirements.Add(new IsHostRequirement());
+                });
+            });
+            services.AddTransient<IAuthorizationHandler,IsHostRequiremenHandler>();
             services.AddScoped<TokenService>();
             return services;
 
