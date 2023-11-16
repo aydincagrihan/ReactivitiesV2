@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { SyntheticEvent, useState } from "react";
 import { useStore } from "../../../app/stores/store";
 import { observer } from "mobx-react-lite";
-import {format} from 'date-fns'
+import { format } from 'date-fns'
 import ActivityListItemAttendee from "./ActivityListItemAttendee";
 
 interface Props {
@@ -23,6 +23,7 @@ export default observer(function ActivityListItem({ activity }: Props) {
         setTarget(e.currentTarget.name);
         deleteActivity(id);
     }
+
     return (
         <Segment.Group>
             <Segment>
@@ -32,14 +33,28 @@ export default observer(function ActivityListItem({ activity }: Props) {
                         <Item.Content>
                             <Item.Header as={Link} to={`/activities/${activity.id}`}></Item.Header>
                             {activity.title}
-                            <Item.Description>Hosted by Bob</Item.Description>
+                            <Item.Description>Hosted by {activity.host?.displayName}</Item.Description>
+                            {activity.isHost && (
+                                <Item.Description>
+                                    <Label basic color="orange">
+                                        You are hosting this activity
+                                    </Label>
+                                </Item.Description>
+                            )}
+                            {activity.isGoing && !activity.isHost &&(
+                                <Item.Description>
+                                    <Label basic color="green">
+                                        You are going to this activity
+                                    </Label>
+                                </Item.Description>
+                            )}
                         </Item.Content>
                     </Item>
                 </Item.Group>
             </Segment>
             <Segment>
                 <span>
-                    <Icon name='clock' />{format(activity.date!,'dd MMM yyyy h:mm aa')}
+                    <Icon name='clock' />{format(activity.date!, 'dd MMM yyyy h:mm aa')}
                     <Icon name='marker' />{activity.venue}
                 </span>
             </Segment>

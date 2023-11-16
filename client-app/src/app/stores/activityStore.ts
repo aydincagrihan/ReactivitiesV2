@@ -4,6 +4,7 @@ import agent from "../api/agent";
 import { v4 as uuid } from "uuid";
 import { textSpanIntersectsWithPosition } from "typescript";
 import { format } from "date-fns";
+import { store } from "./store";
 
 export default class ActivityStore {
   activities: Activity[] = [];
@@ -53,6 +54,7 @@ export default class ActivityStore {
 
   //loadSingle Activity
   loadActivity = async (id: string) => {
+    debugger
     let activity = this.getActivity(id);
     if (activity){
      this.selectedActivity = activity;
@@ -78,6 +80,19 @@ export default class ActivityStore {
 
   };
   private setActivity = (activity: Activity) => {
+// bir kullanıcının etkinliğe katılıp katılmadığını kontrol etmek ve etkinliği oluşturan 
+// kişinin aynı zamanda etkinliğin  ev sahibi olup olmadığını belirlemek için kullanılıyor.
+
+    const user=store.userStore.user;
+    if(user)
+    {
+      activity.isGoing=activity.attendees!.some(
+        a=>a.userName===user.userName
+      )
+      activity.isHost=activity.hostUserName===user.userName;
+      activity.host=activity.attendees?.find(x=>x.userName===activity.hostUserName);
+    }
+
     activity.date=new Date(activity.date!)
     // activity.date = activity.date.split("T")[0];
     this.activityRegistry.set(activity.id, activity);
