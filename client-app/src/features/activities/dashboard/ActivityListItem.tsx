@@ -5,6 +5,7 @@ import { SyntheticEvent, useState } from "react";
 import { useStore } from "../../../app/stores/store";
 import { observer } from "mobx-react-lite";
 import {format} from 'date-fns'
+import ActivityListItemAttendee from "./ActivityListItemAttendee";
 
 interface Props {
     activity: Activity
@@ -30,7 +31,8 @@ export default observer(function ActivityListItem({ activity }: Props) {
                         <Item.Image size='tiny' circular src='/assets/user.png' />
                         <Item.Content>
                             <Item.Header as={Link} to={`/activities/${activity.id}`}></Item.Header>
-                            <Item.Description>Hosted by Çağrıhan</Item.Description>
+                            {activity.title}
+                            <Item.Description>Hosted by Bob</Item.Description>
                         </Item.Content>
                     </Item>
                 </Item.Group>
@@ -42,7 +44,7 @@ export default observer(function ActivityListItem({ activity }: Props) {
                 </span>
             </Segment>
             <Segment secondary>
-                Attendees go here
+                <ActivityListItemAttendee attendees={activity.attendees!} />
             </Segment>
             <Segment clearing>
                 <span>{activity.description}</span>
