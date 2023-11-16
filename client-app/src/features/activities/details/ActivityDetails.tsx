@@ -31,7 +31,7 @@ if( loadingInitial || !selectedActivity) return<LoadingComponent/>
       <ActivityDetailedChat/>
     </Grid.Column>
     <Grid.Column width={6}>
-      <ActivityDetailedSideBar/>
+      <ActivityDetailedSideBar attendees={selectedActivity.attendees!}/>
     </Grid.Column>
    </Grid>
     )
