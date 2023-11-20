@@ -68,9 +68,9 @@ export default class ActivityStore {
         const response = await agent.Activities.details(id);
         activity = response.data;
         this.setActivity(activity);
-        runInAction(()=>{
+        runInAction(() => {
           this.selectedActivity = activity;
-        })
+        });
         this.setLoadingInitial(false);
         return activity;
       } catch (error) {
@@ -128,20 +128,19 @@ export default class ActivityStore {
   // }
   //burda arrow funciton yerine normak funciton kullandığımda "this."  keywordunde bulunan değişkenleri bulamıyor kesinlikle "arrow function kullanılmalı"
   createActivity = async (activity: ActivityFormValues) => {
-    const user=store.userStore.user;
-    const attendee=new Profile(user!);
+    const user = store.userStore.user;
+    const attendee = new Profile(user!);
     try {
       await agent.Activities.create(activity);
       const newActivity = new Activity(activity);
-      newActivity.hostUserName=user!.userName;
-      newActivity.attendees=[attendee];
+      newActivity.hostUserName = user!.userName;
+      newActivity.attendees = [attendee];
       this.setActivity(newActivity);
       runInAction(() => {
         this.selectedActivity = newActivity;
       });
     } catch (error) {
       console.log(error);
-    
     }
   };
 
@@ -149,11 +148,13 @@ export default class ActivityStore {
     try {
       await agent.Activities.update(activity);
       runInAction(() => {
-        if(activity.id)
-        {
-          const updatedActivity={...this.getActivity(activity.id),...activity}
-        this.activityRegistry.set(activity.id, updatedActivity as Activity);
-        this.selectedActivity = updatedActivity as Activity;
+        if (activity.id) {
+          const updatedActivity = {
+            ...this.getActivity(activity.id),
+            ...activity,
+          };
+          this.activityRegistry.set(activity.id, updatedActivity as Activity);
+          this.selectedActivity = updatedActivity as Activity;
         }
       });
     } catch (error) {
@@ -184,19 +185,42 @@ export default class ActivityStore {
     this.loading = true;
     try {
       await agent.Activities.attend(this.selectedActivity!.id);
-      runInAction(()=>{
+      runInAction(() => {
         //activity iptal işlemi
-        if(this.selectedActivity?.isGoing){
-          this.selectedActivity.attendees=this.selectedActivity.attendees?.filter(a=>a.userName!==user?.userName);
-          this.selectedActivity.isGoing=false;
+        if (this.selectedActivity?.isGoing) {
+          this.selectedActivity.attendees =
+            this.selectedActivity.attendees?.filter(
+              (a) => a.userName !== user?.userName
+            );
+          this.selectedActivity.isGoing = false;
         }
         //join to activity
-        else{
-          const attendee=new Profile(user!);
+        else {
+          const attendee = new Profile(user!);
           this.selectedActivity?.attendees?.push(attendee);
-          this.selectedActivity!.isGoing=true;
+          this.selectedActivity!.isGoing = true;
         }
-        this.activityRegistry.set(this.selectedActivity!.id,this.selectedActivity!)
+        this.activityRegistry.set(
+          this.selectedActivity!.id,
+          this.selectedActivity!
+        );
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
+  };
+
+  cancelActivityToggle = async () => {
+    this.loading = true;
+    try {
+      await agent.Activities.attend(this.selectedActivity!.id);
+      runInAction(() => {
+        this.selectedActivity!.isCancelled=!this.selectedActivity!.isCancelled;
+        this.activityRegistry.set(this.selectedActivity!.id,this.selectedActivity!);
       })
     } catch (error) {
       console.log(error);
