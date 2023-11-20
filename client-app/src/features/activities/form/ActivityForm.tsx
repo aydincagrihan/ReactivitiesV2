@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { Button, Header, Segment } from 'semantic-ui-react';
-import { Activity } from '../../../app/models/activity';
+import { Activity, ActivityFormValues } from '../../../app/models/activity';
 import { useStore } from '../../../app/stores/store';
 import { observer } from 'mobx-react-lite';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -22,15 +22,8 @@ export default observer(function ActivityForm() {
 
   const { id } = useParams();
   const navigate = useNavigate();
-  const [activity, setActivity] = useState<Activity>({
-    id: '',
-    title: '',
-    date: null,
-    description: '',
-    category: '',
-    city: '',
-    venue: '',
-  });
+  const [activity, setActivity] = useState<ActivityFormValues>(new ActivityFormValues());
+ 
 
   const validationSchema = Yup.object({
     title: Yup.string().required('Aktivite başlığı gereklidir.'),
@@ -45,16 +38,19 @@ export default observer(function ActivityForm() {
     //activitiy "!" sonuna koymamın nedeni bu ifadenin null or undefined 
     //olmayacağı anlamına gelir yoksa tip güvenliğinden hata return ediyordu
     //TypeScript functionality kapatmak için ! kullanılır
-    if (id) loadActivity(id).then(activity => setActivity(activity!))
+    if (id) loadActivity(id).then(activity => setActivity(new ActivityFormValues(activity)))
   }, [id, loadActivity])
 
 
   // const [activity,setActivity]=useState(initialState);
 
-  function handleFormSubmit(activity: Activity) {
+  function handleFormSubmit(activity: ActivityFormValues) {
     if (!activity.id) {
-      activity.id = uuid();
-      createActivity(activity).then(() => navigate(`/activities/${activity.id}`))
+      let newActivity={
+        ...activity,
+        id:uuid()
+      };
+      createActivity(newActivity).then(() => navigate(`/activities/${newActivity.id}`))
     }
     else {
       updateActivity(activity).then(() => navigate(`/activities/${activity.id}`))
@@ -91,7 +87,7 @@ export default observer(function ActivityForm() {
             <Button
             disabled={isSubmitting||!dirty||!isValid}
               floated='right'
-              loading={loading}
+              loading={isSubmitting}
               positive type="submit"
               content="Submit" />
             <Button as={Link} to='/activities' floated='right' type="button" content="Cancel" />
