@@ -13,6 +13,7 @@ namespace Persistence
         //dotnet ef database drop -p Persistence -s API "Drop database" bunun ardından seedleri tekrar yüklemek için "dotnet watch run" komutu yeterlidir.
         public  DbSet<Activity> Activities { get; set; }
         public DbSet<ActivityAttendee> ActivityAttendees { get; set; }
+        public DbSet<Photo> Photos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
