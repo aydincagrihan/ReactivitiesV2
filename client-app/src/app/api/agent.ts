@@ -64,51 +64,59 @@ const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
 //Bu kodun temel amacı, her HTTP isteği gönderildiğinde otomatik olarak token tabanlı bir yetkilendirme başlığını eklemektir
 // Axios interceptors, HTTP isteklerini veya cevaplarını ele almak ve bunları değiştirmek için kullanılan fonksiyonlardır.
-axios.interceptors.request.use(config=>{
-  const token=store.commonStore.token;
-  if(token&&config.headers)config.headers.Authorization=`Bearer ${token}`;
+axios.interceptors.request.use((config) => {
+  const token = store.commonStore.token;
+  if (token && config.headers) config.headers.Authorization = `Bearer ${token}`;
   return config;
-})
+});
 
 const request = {
   get: <T>(url: string) => axios.get<T>(url).then(responseBody),
-  post: <T>(url: string, body: {}) => axios .post<T>(url, body, { headers: { "Content-Type": "application/json" } }) .then(responseBody),
-  put: <T>(url: string, body: {},) => axios.put<T>(url,body,{ headers: { "Content-Type": "application/json" } }).then(responseBody),
+  post: <T>(url: string, body: {}) =>
+    axios
+      .post<T>(url, body, { headers: { "Content-Type": "application/json" } })
+      .then(responseBody),
+  put: <T>(url: string, body: {}) =>
+    axios
+      .put<T>(url, body, { headers: { "Content-Type": "application/json" } })
+      .then(responseBody),
   del: <T>(url: string) => axios.delete<T>(url).then(responseBody),
 };
 
 const Activities = {
   list: () => request.get<Activity[]>("/activities"),
   details: (id: string) => axios.get<Activity>(`activities/${id}`),
-  create: (activity: ActivityFormValues) => request.post<void>("/activities", activity),
+  create: (activity: ActivityFormValues) =>
+    request.post<void>("/activities", activity),
   update: (activity: ActivityFormValues) =>
-  request.put<void>(`activities/${activity.id}`, activity),
+    request.put<void>(`activities/${activity.id}`, activity),
   delete: (id: string) => request.del<void>(`/activities/${id}`),
-  attend:(id:string) => request.post<void>(`/activities/${id}/attend`, {}),
-
+  attend: (id: string) => request.post<void>(`/activities/${id}/attend`, {}),
 };
 
 const Account = {
   current: () => request.get<User>("/account"),
   login: (user: UserFormValues) => request.post<User>("/account/login", user),
   register: (user: UserFormValues) =>
-  request.post<User>("/account/register", user),
+    request.post<User>("/account/register", user),
 };
 
-const Profiles={
-  get:(username:string) =>request.get<Profile>(`/profiles/${username}`),
-  uploadPhoto:(file:Blob)=>{
+const Profiles = {
+  get: (username: string) => request.get<Profile>(`/profiles/${username}`),
+  uploadPhoto: (file: Blob) => {
     let formData = new FormData();
-    formData.append('File',file);
-    return axios.post<Photo>('photos',formData,{
-      headers: {'Content-Type':'multipart/form-data'}
+    formData.append("File", file);
+    return axios.post<Photo>("photos", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
-  }
-}
+  },
+  setMainPhoto: (id: string) => request.post(`/photos/${id}/setMain`, {}),
+  deletePhoto: (id: string) => request.del(`/photos/${id}`),
+};
 
 const agent = {
   Activities,
   Account,
-  Profiles
+  Profiles,
 };
 export default agent;
