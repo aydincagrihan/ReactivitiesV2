@@ -70,7 +70,7 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
-const request = {
+const requests = {
   get: <T>(url: string) => axios.get<T>(url).then(responseBody),
   post: <T>(url: string, body: {}) =>
     axios
@@ -84,34 +84,36 @@ const request = {
 };
 
 const Activities = {
-  list: () => request.get<Activity[]>("/activities"),
+  list: () => requests.get<Activity[]>("/activities"),
   details: (id: string) => axios.get<Activity>(`activities/${id}`),
   create: (activity: ActivityFormValues) =>
-    request.post<void>("/activities", activity),
+    requests.post<void>("/activities", activity),
   update: (activity: ActivityFormValues) =>
-    request.put<void>(`activities/${activity.id}`, activity),
-  delete: (id: string) => request.del<void>(`/activities/${id}`),
-  attend: (id: string) => request.post<void>(`/activities/${id}/attend`, {}),
+    requests.put<void>(`activities/${activity.id}`, activity),
+  delete: (id: string) => requests.del<void>(`/activities/${id}`),
+  attend: (id: string) => requests.post<void>(`/activities/${id}/attend`, {}),
 };
 
 const Account = {
-  current: () => request.get<User>("/account"),
-  login: (user: UserFormValues) => request.post<User>("/account/login", user),
+  current: () => requests.get<User>("/account"),
+  login: (user: UserFormValues) => requests.post<User>("/account/login", user),
   register: (user: UserFormValues) =>
-    request.post<User>("/account/register", user),
+    requests.post<User>("/account/register", user),
 };
 
 const Profiles = {
-  get: (username: string) => request.get<Profile>(`/profiles/${username}`),
+  get: (username: string) => requests.get<Profile>(`/profiles/${username}`),
   uploadPhoto: (file: Blob) => {
     let formData = new FormData();
     formData.append("File", file);
     return axios.post<Photo>("photos", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: { "Content-type": "multipart/form-data" },
     });
   },
-  setMainPhoto: (id: string) => request.post(`/photos/${id}/setMain`, {}),
-  deletePhoto: (id: string) => request.del(`/photos/${id}`),
+  setMainPhoto: (id: string) => requests.post(`/photos/${id}/setMain`, {}),
+  deletePhoto: (id: string) => requests.del(`/photos/${id}`),
+  updateProfile: (profile: Partial<Profile>) =>
+    requests.put(`/profiles`, profile),
 };
 
 const agent = {
