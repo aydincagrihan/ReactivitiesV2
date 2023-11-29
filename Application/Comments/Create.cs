@@ -20,7 +20,7 @@ namespace Application.Comments
         public class Command : IRequest<Result<CommentsDto>>
         {
             public string Body { get; set; }
-            public Guid Id { get; set; }
+            public Guid ActivityId { get; set; }
 
         }
         public class CommandValidator : AbstractValidator<Command>
@@ -45,7 +45,7 @@ namespace Application.Comments
 
             public async Task<Result<CommentsDto>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var activity = await _context.Activities.FindAsync(request.Id);
+                var activity = await _context.Activities.FindAsync(request.ActivityId);
 
                 if (activity == null) return null;
 

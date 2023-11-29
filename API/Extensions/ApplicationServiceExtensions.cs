@@ -31,7 +31,7 @@ namespace API.Extensions
             //var app = Build(); sonra yapıldığında sorun olduğu için üste taşındı
 
             services.AddCors(opt =>
-            
+
             {
                 opt.AddPolicy("CorsPolicy", policy =>
                 {
@@ -44,9 +44,10 @@ namespace API.Extensions
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssemblyContaining<Create>();
             services.AddHttpContextAccessor();
-            services.AddScoped<IUserAccessor,UserAccessor>();
+            services.AddScoped<IUserAccessor, UserAccessor>();
+            services.AddScoped<IPhotoAccessor, PhotoAccessor>();
             services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
-            services.AddScoped<IPhotoAccessor,PhotoAccessor>();
+            services.AddSignalR();
 
             return services;
         }
