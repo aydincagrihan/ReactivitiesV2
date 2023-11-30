@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Application.Core;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -21,20 +17,20 @@ namespace Application.Comments
         public class Handler : IRequestHandler<Query, Result<List<CommentsDto>>>
         {
             private readonly DataContext _context;
-            public readonly IMapper _mapper;
+            private readonly IMapper _mapper;
             public Handler(DataContext context, IMapper mapper)
             {
-                _context = context;
                 _mapper = mapper;
+                _context = context;
             }
 
             public async Task<Result<List<CommentsDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var comments = await _context.Comments
-                .Where(x => x.Activity.Id == request.ActivityId)
-                .OrderBy(x => x.CreatedAt)
-                .ProjectTo<CommentsDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+                    .Where(x => x.Activity.Id == request.ActivityId)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .ProjectTo<CommentsDto>(_mapper.ConfigurationProvider)
+                    .ToListAsync();
 
                 return Result<List<CommentsDto>>.Success(comments);
             }

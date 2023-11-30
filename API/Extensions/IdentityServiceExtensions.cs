@@ -38,19 +38,19 @@ namespace API.Extensions
 
                 };
                 //SignalR İçin Auth işlemleri
-                opt.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = context =>
+               opt.Events = new JwtBearerEvents
                     {
-                        var accessToken = context.Request.Query["access_token"];
-                        var path = context.HttpContext.Request.Path;
-                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chat"))
+                        OnMessageReceived = context =>
                         {
-                            context.Token = accessToken;
+                            var accessToken = context.Request.Query["access_token"];
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/chat")))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
                         }
-                        return Task.CompletedTask;
-                    }
-                };
+                    };
 
             });
             services.AddAuthorization(opt =>

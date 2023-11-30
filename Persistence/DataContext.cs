@@ -34,9 +34,9 @@ namespace Persistence
 
             //Bir activity silindiği zaman yorumlarında cascade şekilde silinmesini sağlar.
             builder.Entity<Comment>()
-            .HasOne(a => a.Activity)
-            .WithMany(c => c.Comments)
-            .OnDelete(DeleteBehavior.Cascade);
+              .HasOne(a => a.Activity)
+              .WithMany(c => c.Comments)
+              .OnDelete(DeleteBehavior.Cascade);
 
         }
     }

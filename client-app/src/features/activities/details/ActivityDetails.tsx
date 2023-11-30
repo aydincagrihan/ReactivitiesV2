@@ -12,13 +12,14 @@ import ActivityDetailedSideBar from './ActivityDetailedSideBar';
 export default observer(function ActivityDetails(){
 
 const {activityStore}=useStore();
-const {selectedActivity,loadingInitial,loadActivity}=activityStore
+const {selectedActivity,loadingInitial,loadActivity,clearSelectedActivity}=activityStore
 const {id}=useParams();
 
 useEffect(()=>{
 if(id)loadActivity(id);
+return()=>clearSelectedActivity();
 
-},[id,loadActivity])
+},[id,loadActivity,clearSelectedActivity])
 
 if( loadingInitial || !selectedActivity) return<LoadingComponent/>
 
@@ -28,7 +29,7 @@ if( loadingInitial || !selectedActivity) return<LoadingComponent/>
     <Grid.Column width={10}>
       <ActivityDetailedHeader activity={selectedActivity}/>
       <ActivityDetailedInfo activity={selectedActivity}/>
-      <ActivityDetailedChat/>
+      <ActivityDetailedChat activityId={selectedActivity.id}/>
     </Grid.Column>
     <Grid.Column width={6}>
       <ActivityDetailedSideBar activity={selectedActivity}/>
