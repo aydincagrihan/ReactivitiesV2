@@ -36,7 +36,7 @@ export default observer(function ActivityListItem({ activity }: Props) {
                         <Item.Content>
                             <Item.Header as={Link} to={`/activities/${activity.id}`}></Item.Header>
                             {activity.title}
-                            <Item.Description>Hosted by <Link to={`/profiles/${activity.hostUserName}`}>{activity.host?.displayName}</Link></Item.Description>
+                            <Item.Description>Hosted by <Link to={`/profiles/${activity.hostUsername}`}>{activity.host?.displayName}</Link></Item.Description>
                             {activity.isHost && (
                                 <Item.Description>
                                     <Label basic color="orange">

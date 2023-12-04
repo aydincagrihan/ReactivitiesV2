@@ -22,8 +22,8 @@ export default observer( function ProfileHeader({profile}:Props) {
                 </Grid.Column>
                 <Grid.Column width={4}> 
                     <Statistic.Group widths={15}>
-                        <Statistic label="Followers" value="5" />
-                        <Statistic label="Following" value="25" />
+                        <Statistic label="Followers" value={profile.followersCount} />
+                        <Statistic label="Following" value={profile.followingCount}/>
                     </Statistic.Group>
                     <Divider />{/* İkiye bölmek için kullanılıyor ince bir çizgi */ }
                     <Reveal animated='move'>

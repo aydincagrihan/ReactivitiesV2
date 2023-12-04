@@ -14,15 +14,15 @@ interface Props {
 
 export default observer(function ActivityDetailedChat({ activityId }: Props) {
     const { commentStore } = useStore();
-
-    useEffect(() => {
-        if (activityId) {
-            commentStore.createHubConnection(activityId);
-        }
-        return () => {
-            commentStore.clearComments();
-        }
-    }, [commentStore, activityId])
+//kapatıldı storedan açılmalı
+    // useEffect(() => {
+    //     if (activityId) {
+    //         commentStore.createHubConnection(activityId);
+    //     }
+    //     return () => {
+    //         commentStore.clearComments();
+    //     }
+    // }, [commentStore, activityId])
 
     return (
         <>

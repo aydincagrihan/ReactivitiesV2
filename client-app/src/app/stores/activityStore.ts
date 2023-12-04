@@ -87,9 +87,9 @@ export default class ActivityStore {
       activity.isGoing = activity.attendees!.some(
         (a) => a.userName === user.userName
       );
-      activity.isHost = activity.hostUserName === user.userName;
+      activity.isHost = activity.hostUsername === user.userName;
       activity.host = activity.attendees?.find(
-        (x) => x.userName === activity.hostUserName
+        (x) => x.userName === activity.hostUsername
       );
     }
 
@@ -133,7 +133,7 @@ export default class ActivityStore {
     try {
       await agent.Activities.create(activity);
       const newActivity = new Activity(activity);
-      newActivity.hostUserName = user!.userName;
+      newActivity.hostUsername = user!.userName;
       newActivity.attendees = [attendee];
       this.setActivity(newActivity);
       runInAction(() => {
@@ -219,9 +219,13 @@ export default class ActivityStore {
     try {
       await agent.Activities.attend(this.selectedActivity!.id);
       runInAction(() => {
-        this.selectedActivity!.isCancelled=!this.selectedActivity!.isCancelled;
-        this.activityRegistry.set(this.selectedActivity!.id,this.selectedActivity!);
-      })
+        this.selectedActivity!.isCancelled =
+          !this.selectedActivity!.isCancelled;
+        this.activityRegistry.set(
+          this.selectedActivity!.id,
+          this.selectedActivity!
+        );
+      });
     } catch (error) {
       console.log(error);
     } finally {
@@ -233,5 +237,5 @@ export default class ActivityStore {
 
   clearSelectedActivity = () => {
     this.selectedActivity = undefined;
-  }
+  };
 }
