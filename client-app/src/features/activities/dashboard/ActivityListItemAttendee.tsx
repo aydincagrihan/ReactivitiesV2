@@ -13,7 +13,7 @@ export default observer(function ActivityListItemAttendee({ attendees }: Props) 
 
     const styles = {
         borderColor: 'orange',
-        borderWith: 3
+        borderWith: 5
     }
 
     return (
