@@ -6,6 +6,7 @@ import { textSpanIntersectsWithPosition } from "typescript";
 import { format } from "date-fns";
 import { store } from "./store";
 import { Profile } from "../models/profile";
+import { Pagination, PagingParams } from "../models/pagination";
 
 export default class ActivityStore {
   activities: Activity[] = [];
@@ -14,10 +15,23 @@ export default class ActivityStore {
   editMode: boolean = false;
   loading: boolean = false;
   loadingInitial: boolean = false;
+  pagination: Pagination | null = null;
+  pagingParams = new PagingParams();
 
   constructor() {
     makeAutoObservable(this);
   }
+  setPagingParams = (pagingParams: PagingParams) => {
+    this.pagingParams = pagingParams;
+  };
+
+  get axiosParams() {
+    const params = new URLSearchParams();
+    params.append("pageNumber", this.pagingParams.pageNumber.toString());
+    params.append("pageSize", this.pagingParams.pageSize.toString());
+    return params;
+  }
+
   // "!" bang operator that means variable can not be null or undefined
   get activitiesByDate() {
     return Array.from(this.activityRegistry.values()).sort(
@@ -40,19 +54,24 @@ export default class ActivityStore {
   loadActivities = async () => {
     this.setLoadingInitial(true);
     try {
-      const activities = await agent.Activities.list();
-      activities.forEach((activity) => {
+      const result = await agent.Activities.list(this.axiosParams);
+      result.data.forEach((activity) => {
         //response gelip datalar basılmadan önce tarih formatında düzenleme yaptım//
         // activity.date = activity.date.split("T")[0];
         // this.activities.push(activity);
         // this.activityRegistry.set(activity.id, activity);
         this.setActivity(activity);
       });
+      this.setPagination(result.pagination);
       this.setLoadingInitial(false);
     } catch (error) {
       console.log(error);
       this.setLoadingInitial(false);
     }
+  };
+
+  setPagination = (pagination: Pagination) => {
+    this.pagination = pagination;
   };
 
   //loadSingle Activity
@@ -239,15 +258,16 @@ export default class ActivityStore {
     this.selectedActivity = undefined;
   };
 
-  updateAttendeeFollowing=(username:string) => {
-    this.activityRegistry.forEach(activity => {
-      activity.attendees?.forEach((attendee:Profile) => {
-        if(attendee.userName===username)
-        {
-          attendee.following?attendee.followersCount--:attendee.followersCount++;
-          attendee.following= !attendee.following;
+  updateAttendeeFollowing = (username: string) => {
+    this.activityRegistry.forEach((activity) => {
+      activity.attendees?.forEach((attendee: Profile) => {
+        if (attendee.userName === username) {
+          attendee.following
+            ? attendee.followersCount--
+            : attendee.followersCount++;
+          attendee.following = !attendee.following;
         }
-      })
-    })
-  }
+      });
+    });
+  };
 }

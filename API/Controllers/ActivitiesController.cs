@@ -2,6 +2,7 @@ using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Application.Activities;
 using Microsoft.AspNetCore.Authorization;
+using Application.Core;
 
 namespace API.Controllers
 {
@@ -10,10 +11,10 @@ namespace API.Controllers
     public class ActivitiesController : BaseApiController
     {
         [HttpGet]
-        public async Task<IActionResult> GetActivities()
+        public async Task<IActionResult> GetActivities([FromQuery]PagingParams param)
         {
             // return await Mediator.Send(new Application.Activities.List.Query());
-            return HandleResult(await Mediator.Send(new Application.Activities.List.Query()));
+            return HandlePagedResult(await Mediator.Send(new Application.Activities.List.Query{Params=param}));
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetActivity(Guid id)
