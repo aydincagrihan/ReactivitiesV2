@@ -1,8 +1,7 @@
 import { Button, Icon, Item, Label, Segment } from "semantic-ui-react";
 import { Activity } from "../../../app/models/activity";
 import { Link } from "react-router-dom";
-import { SyntheticEvent, useState } from "react";
-import { useStore } from "../../../app/stores/store";
+// import { useStore } from "../../../app/stores/store";
 import { observer } from "mobx-react-lite";
 import { format } from 'date-fns'
 import ActivityListItemAttendee from "./ActivityListItemAttendee";
@@ -14,15 +13,15 @@ interface Props {
 
 export default observer(function ActivityListItem({ activity }: Props) {
 
-    const [target, setTarget] = useState('');
-    const { activityStore } = useStore();
-    const { deleteActivity, activities, loading: submitting, activitiesByDate } = activityStore
+    // const [_, setTarget] = useState('');
+    // const { activityStore } = useStore();
+    // const { deleteActivity} = activityStore
 
 
-    function handleActivityDelete(e: SyntheticEvent<HTMLButtonElement>, id: string) {
-        setTarget(e.currentTarget.name);
-        deleteActivity(id);
-    }
+    // function handleActivityDelete(e: SyntheticEvent<HTMLButtonElement>, id: string) {
+    //     setTarget(e.currentTarget.name);
+    //     deleteActivity(id);
+    // }
 
     return (
         <Segment.Group>

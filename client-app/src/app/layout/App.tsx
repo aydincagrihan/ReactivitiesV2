@@ -1,8 +1,6 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect } from 'react';
 import { Container } from 'semantic-ui-react';
-import { Activity } from '../models/activity'
 import NavBar from './NavBar';
-import ActivityDasboard from '../../features/activities/dashboard/ActivityDashboard';
 import LoadingComponent from './LoadingComponent';
 import { useStore } from '../stores/store';
 import { observer } from 'mobx-react-lite';

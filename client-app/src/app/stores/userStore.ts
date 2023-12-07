@@ -3,7 +3,6 @@ import { User, UserFormValues } from "../models/user";
 import agent from "../api/agent";
 import { store } from "./store";
 import { router } from "../router/Route";
-import { isThisISOWeek } from "date-fns";
 
 export default class UserStore {
   user: User | null = null;
