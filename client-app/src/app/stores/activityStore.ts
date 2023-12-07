@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable, reaction, runInAction } from "mobx";
 import { Activity, ActivityFormValues } from "../models/activity";
 import agent from "../api/agent";
 import { v4 as uuid } from "uuid";
@@ -17,18 +17,62 @@ export default class ActivityStore {
   loadingInitial: boolean = false;
   pagination: Pagination | null = null;
   pagingParams = new PagingParams();
+  predicate = new Map().set("all", true);
 
   constructor() {
     makeAutoObservable(this);
-  }
+
+    reaction(
+        () => this.predicate.keys(),
+        () => {
+            this.pagingParams = new PagingParams();
+            this.activityRegistry.clear();
+            this.loadActivities();
+        }
+    )
+}
   setPagingParams = (pagingParams: PagingParams) => {
     this.pagingParams = pagingParams;
   };
+
+  setPredicate = (predicate: string, value: string | Date) => {
+    const resetPredicate = () => {
+        this.predicate.forEach((value, key) => {
+            if (key !== 'startDate') this.predicate.delete(key);
+        })
+    }
+    switch (predicate) {
+        case 'all':
+            resetPredicate();
+            this.predicate.set('all', true);
+            break;
+        case 'isGoing':
+            resetPredicate();
+            this.predicate.set('isGoing', true);
+            break;
+        case 'isHost':
+            resetPredicate();
+            this.predicate.set('isHost', true);
+            break;
+        case 'startDate':
+            this.predicate.delete('startDate');
+            this.predicate.set('startDate', value);
+            break;
+    }
+}
 
   get axiosParams() {
     const params = new URLSearchParams();
     params.append("pageNumber", this.pagingParams.pageNumber.toString());
     params.append("pageSize", this.pagingParams.pageSize.toString());
+    this.predicate.forEach((value, key) => {
+      if (key === "startDate") {
+        params.append(key, (value as Date).toISOString());
+      } else {
+        params.append(key, value);
+      }
+    });
+
     return params;
   }
 
@@ -104,11 +148,11 @@ export default class ActivityStore {
     const user = store.userStore.user;
     if (user) {
       activity.isGoing = activity.attendees!.some(
-        (a) => a.userName === user.userName
+        (a) => a.username === user.userName
       );
       activity.isHost = activity.hostUsername === user.userName;
       activity.host = activity.attendees?.find(
-        (x) => x.userName === activity.hostUsername
+        (x) => x.username === activity.hostUsername
       );
     }
 
@@ -209,7 +253,7 @@ export default class ActivityStore {
         if (this.selectedActivity?.isGoing) {
           this.selectedActivity.attendees =
             this.selectedActivity.attendees?.filter(
-              (a) => a.userName !== user?.userName
+              (a) => a.username !== user?.userName
             );
           this.selectedActivity.isGoing = false;
         }
@@ -261,7 +305,7 @@ export default class ActivityStore {
   updateAttendeeFollowing = (username: string) => {
     this.activityRegistry.forEach((activity) => {
       activity.attendees?.forEach((attendee: Profile) => {
-        if (attendee.userName === username) {
+        if (attendee.username === username) {
           attendee.following
             ? attendee.followersCount--
             : attendee.followersCount++;
